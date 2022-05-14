@@ -14,7 +14,6 @@ static const unsigned int LINE_TRIGGER = 4; // TODO: change
 static const unsigned int LINE_ECHO = 5;    // TODO: change
 static const unsigned int TRIGGER_IMPULSE_DURATION_US = 10;
 static const double SOUND_SPEED_M_PER_S = 340.29;
-static const double MEASUREMENT_PERIOND_MS = 40;
 
 typedef double distance_t;
 
@@ -134,12 +133,9 @@ int main() {
     struct hardware_io_t hio;
     open_harware_io(&hio);
 
-    for (;;) {
-        sleep_for_us(MEASUREMENT_PERIOND_MS * 1000);
-        distance_t distance = get_distance_m(&hio);
-        long current_time = get_time_ns();
-        printf("Distance at %lfns: %ld", distance, current_time);
-    }
+    distance_t distance = get_distance_m(&hio);
+    long current_time = get_time_ns();
+    printf("%lf;%ld", distance, current_time);
 
     close_hardware_io(&hio);
 }

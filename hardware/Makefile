@@ -1,4 +1,4 @@
-APP_NAME=linswapp-hardware
+APP_NAME=speedometer
 OBJS := main.o
 
 ${APP_NAME}: ${OBJS}
