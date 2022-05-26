@@ -1,6 +1,7 @@
 const MAIN_BUTTON_ID = 'main-button';
 
-const SOCKET_ADDRESS = 'ws://localhost:8888/socket';
+// 'ws://192.168.145.221:8888/socket';
+const SOCKET_ADDRESS = 'ws://' + /https?:\/\/([^\/]*)\/.*/.exec(window.location.href)[1] + '/socket'
 const SOCKET_GET_MSG = 'get';
 const MSG_SEPARATOR = ';';
 const MESSAGE_CYCLE = 100.0;
@@ -140,11 +141,12 @@ const redrawGraph = (ctx, data) => {
 }
 
 const parseMsg = msg => {
-    const [speedStr, timeStr] = msg.split(MSG_SEPARATOR);
-    return [parseFloat(speedStr), parseInt(timeStr)];
+    const [distStr, timeStr] = msg.split(MSG_SEPARATOR);
+    return [parseFloat(distStr), parseInt(timeStr)];
 };
 
 let dataInterval = null;
+let lastData = null;
 
 const openSocket = (ctx, data) => {
     const socket = new WebSocket(SOCKET_ADDRESS);
@@ -154,8 +156,14 @@ const openSocket = (ctx, data) => {
         }
 
         const newData = parseMsg(msg.data);
-        data.push(newData);
-        redrawGraph(ctx, data)
+
+        if(lastData !== null) {
+            const newSpeed = (newData[0] - lastData[0]) / ((newData[1] - lastData[1]) / 1e9);
+            data.push([newSpeed, newData[1]]);
+            redrawGraph(ctx, data)
+        }
+
+        lastData = newData;
     };
 
     return socket;

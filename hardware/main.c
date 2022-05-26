@@ -10,8 +10,8 @@
 
 static const char* CHIPNAME = "gpiochip0";
 static const char* CONSUMER = "example1";
-static const unsigned int LINE_TRIGGER = 4; // TODO: change
-static const unsigned int LINE_ECHO = 5;    // TODO: change
+static const unsigned int LINE_TRIGGER = 18;
+static const unsigned int LINE_ECHO = 24;
 static const unsigned int TRIGGER_IMPULSE_DURATION_US = 10;
 static const double SOUND_SPEED_M_PER_S = 340.29;
 
@@ -58,8 +58,6 @@ long get_time_ns() {
 }
 
 void open_harware_io(struct hardware_io_t* hio) {
-    printf("Accessing GPIO hardware...\n");
-
     hio->chip = gpiod_chip_open_by_name(CHIPNAME);
     CHECK_NULL(hio->chip, "Error opening chip");
 
@@ -119,7 +117,7 @@ double wait_for_echo_val(struct hardware_io_t* hio, int val) {
 }
 
 double measurement_to_distance_m(double high_duration_ns) {
-    return high_duration_ns / 2.0 * SOUND_SPEED_M_PER_S;
+    return high_duration_ns / 1e9 / 2.0 * SOUND_SPEED_M_PER_S;
 }
 
 distance_t get_distance_m(struct hardware_io_t* hio) {

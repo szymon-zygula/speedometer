@@ -1,8 +1,8 @@
 #!/bin/sh
 
 TOOLCHAIN_PATH=$BRPATH/output/host/usr/bin
-APP_NAME=speedomenter
+APP_NAME=speedometer
 echo Using toolchain at $TOOLCHAIN_PATH
 export PATH=$TOOLCHAIN_PATH:$PATH
 make clean
-make ARCH=arm CC=aarch64-none-linux-gnu-gcc CFLAGS=-g speedomenter
+make ARCH=arm CC=aarch64-none-linux-gnu-gcc CFLAGS=-g speedometer

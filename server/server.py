@@ -5,10 +5,8 @@ import tornado.websocket
 import time
 
 PORT = 8888
-# TODO
-SPEED_PATH = '/home/szymon/Repositories/speedometer/hardware/speedometer'
-# TODO
-STATIC_PATH = '/home/szymon/Repositories/speedometer/web/'
+SPEED_PATH = '/opt/speedometer/hardware/speedometer'
+STATIC_PATH = '/opt/speedometer/web/'
 INDEX_URL = '/static/index.html'
 SLEEP_TIME_ON_ERROR = 0.01
 SOCKET_GET_MSG = 'get'
@@ -52,6 +50,7 @@ def make_app():
 
 
 if __name__ == '__main__':
+    print("Starting speedometer server on port " + str(PORT))
     app = make_app()
     app.listen(PORT)
     tornado.ioloop.IOLoop.current().start()
