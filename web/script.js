@@ -12,6 +12,8 @@ const HALF_CANVAS_SIZE = CANVAS_SIZE / 2;
 const PLOT_COLOR = 'red';
 const MARK_LENGTH = 10;
 
+const AVERAGE_SAMPLE = 6;
+
 const Y_DOMAIN_MARGIN_M_PER_S = 0.5;
 const Y_MIN_DOMAIN_M_PER_S = 0.5;
 const Y_AVAILABLE_SPACE = CANVAS_SIZE - 80;
@@ -151,16 +153,32 @@ let lastData = null;
 const openSocket = (ctx, data) => {
     const socket = new WebSocket(SOCKET_ADDRESS);
     socket.onmessage = msg => {
-        if(dataInterval === null) {
+        if (dataInterval === null) {
             return;
         }
 
         const newData = parseMsg(msg.data);
 
-        if(lastData !== null) {
+        if (lastData !== null) {
             const newSpeed = (newData[0] - lastData[0]) / ((newData[1] - lastData[1]) / 1e9);
             data.push([newSpeed, newData[1]]);
-            redrawGraph(ctx, data)
+            const drawData = [];
+
+            let sum = 0;
+            let sumt = 0;
+            for (let i = 0; i < data.length; ++i) {
+                sum += data[i][0];
+                sumt += data[i][1];
+                if (i + 1 >= AVERAGE_SAMPLE) {
+                    drawData.push([sum / AVERAGE_SAMPLE, sumt / AVERAGE_SAMPLE]);
+                    sum -= data[i - AVERAGE_SAMPLE + 1][0];
+                    sumt -= data[i - AVERAGE_SAMPLE + 1][1];
+                }
+            }
+
+            if(drawData.length > 0) {
+                redrawGraph(ctx, drawData)
+            }
         }
 
         lastData = newData;
