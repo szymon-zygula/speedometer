@@ -6,7 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <gpiod.h>
+#include "gpiod.h"
 
 static const char* CHIPNAME = "gpiochip0";
 static const char* CONSUMER = "example1";
